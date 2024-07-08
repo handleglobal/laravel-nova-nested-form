@@ -2,7 +2,7 @@
 
 namespace Handleglobal\NestedForm;
 
-use Illuminate\Contracts\Validation\Rule;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Contracts\RelatableField;
@@ -320,7 +320,7 @@ class NestedForm extends Field implements RelatableField
      */
     public function rules($rules)
     {
-        parent::rules(($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules);
+        parent::rules(($rules instanceof ValidationRule || is_string($rules)) ? func_get_args() : $rules);
 
         return $this->returnContext;
     }
