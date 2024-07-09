@@ -2,9 +2,6 @@
 
 namespace Handleglobal\NestedForm;
 
-use Illuminate\Database\Eloquent\Model;
-use Laravel\Nova\Fields\ID;
-
 class NestedFormChild extends NestedFormSchema
 {
 
@@ -30,7 +27,7 @@ class NestedFormChild extends NestedFormSchema
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return array_merge(parent::jsonSerialize(), [
             'resourceId' => $this->model->getKey(),
