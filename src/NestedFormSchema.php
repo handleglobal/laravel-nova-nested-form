@@ -12,7 +12,6 @@ use Laravel\Nova\Fields\File;
 use Laravel\Nova\Fields\MorphTo;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Panel;
-use Laravel\Nova\Resource;
 use ReflectionMethod;
 
 class NestedFormSchema implements JsonSerializable
@@ -49,6 +48,11 @@ class NestedFormSchema implements JsonSerializable
      * @var string
      */
     protected static $filterMethod = 'creationFields';
+
+    /**
+     * Current request.
+     */
+    protected NovaRequest $request;
 
     /**
      * Create a new NestedFormSchema instance.
@@ -235,7 +239,7 @@ class NestedFormSchema implements JsonSerializable
      *
      * @return array
      */
-    public function jsonSerialize()
+    public function jsonSerialize(): array
     {
         return [
             'fields' => $this->fields,

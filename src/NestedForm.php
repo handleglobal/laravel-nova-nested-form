@@ -2,7 +2,7 @@
 
 namespace Handleglobal\NestedForm;
 
-use function GuzzleHttp\json_encode;
+use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
 use Laravel\Nova\Contracts\RelatableField;
@@ -21,8 +21,8 @@ use Laravel\Nova\Http\Requests\DetachResourceRequest;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Http\Requests\UpdateResourceRequest;
 use Laravel\Nova\Nova;
-use Illuminate\Contracts\Validation\Rule;
 use Laravel\Nova\Panel;
+use Symfony\Component\HttpFoundation\FileBag;
 
 class NestedForm extends Field implements RelatableField
 {
@@ -320,7 +320,7 @@ class NestedForm extends Field implements RelatableField
      */
     public function rules($rules)
     {
-        parent::rules(($rules instanceof Rule || is_string($rules)) ? func_get_args() : $rules);
+        parent::rules(($rules instanceof ValidationRule || is_string($rules)) ? func_get_args() : $rules);
 
         return $this->returnContext;
     }
@@ -530,7 +530,9 @@ class NestedForm extends Field implements RelatableField
             return $value === self::ID ? $model->getKey() : $value;
         })->toArray()));
 
-        $createRequest->files = collect($request->file($requestAttribute . '.' . $index));
+        if ($request->hasFile($requestAttribute . '.' . $index)) {
+            $createRequest->files = new FileBag($request->file($requestAttribute . '.' . $index));
+        }
 
         return $createRequest;
     }
