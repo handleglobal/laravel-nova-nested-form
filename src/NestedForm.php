@@ -609,8 +609,19 @@ class NestedForm extends Field implements RelatableField
      */
     public function jsonSerialize() : array
     {
+
+        $data = parent::jsonSerialize();
+
+
+        $fields = (is_array($data['schema']->fields)) ? $data['schema']->fields : $data['schema']->fields->toArray();
+
+        foreach ($fields as $key => $item) {
+            $fields[$key]['withLabel'] = true;
+        }
+        $data['schema']->fields = $fields;
+
         return array_merge(
-            parent::jsonSerialize(),
+            $data,
             [
                 'singularLabel' => $this->singularLabel,
                 'pluralLabel' => $this->pluralLabel,
@@ -623,7 +634,8 @@ class NestedForm extends Field implements RelatableField
                 'keyName' => $this->keyName,
                 'min' => $this->min,
                 'max' => $this->isManyRelationsip() ? $this->max : 1,
-                'displayIf' => isset($this->displayIfCallback) ? call_user_func($this->displayIfCallback) : null
+                'displayIf' => isset($this->displayIfCallback) ? call_user_func($this->displayIfCallback) : null,
+                'withLabel' => true
             ]
         );
     }
