@@ -29,7 +29,15 @@ class NestedFormChild extends NestedFormSchema
      */
     public function jsonSerialize(): array
     {
-        return array_merge(parent::jsonSerialize(), [
+        $data = parent::jsonSerialize();
+        $fields = (is_array($data['fields'])) ? $data['fields'] : $data['fields']->toArray();
+
+        foreach ($fields as $key => $item) {
+            $fields[$key]['withLabel'] = true;
+        }
+        $data['fields'] = $fields;
+
+        return array_merge($data, [
             'resourceId' => $this->model->getKey(),
             $this->parentForm->keyName => $this->model->getKey(),
         ]);
