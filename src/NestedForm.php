@@ -204,7 +204,7 @@ class NestedForm extends Field implements RelatableField
      */
     public function relationshipName()
     {
-//        return $this->viaRelationship;
+        //        return $this->viaRelationship;
     }
 
     /**
@@ -214,7 +214,7 @@ class NestedForm extends Field implements RelatableField
      */
     public function relationshipType()
     {
-//        return $this->getRelationshipType();
+        //        return $this->getRelationshipType();
     }
 
     /**
@@ -607,18 +607,20 @@ class NestedForm extends Field implements RelatableField
      *
      * @return array
      */
-    public function jsonSerialize() : array
+    public function jsonSerialize(): array
     {
 
         $data = parent::jsonSerialize();
 
 
-        $fields = (is_array($data['schema']->fields)) ? $data['schema']->fields : $data['schema']->fields->toArray();
+        if (isset($data['schema'])) {
+            $fields = (is_array($data['schema']->fields)) ? $data['schema']->fields : $data['schema']->fields->toArray();
 
-        foreach ($fields as $key => $item) {
-            $fields[$key]['withLabel'] = true;
+            foreach ($fields as $key => $item) {
+                $fields[$key]['withLabel'] = true;
+            }
+            $data['schema']->fields = $fields;
         }
-        $data['schema']->fields = $fields;
 
         return array_merge(
             $data,
